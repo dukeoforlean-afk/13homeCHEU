@@ -71,11 +71,12 @@ nav.dark .brg span{background:var(--cream)}
   background:var(--cream);z-index:199;
   padding:36px 28px;overflow-y:auto;
 }
-.mmenu a{display:block;font-size:26px;font-weight:700;color:var(--ink);padding:16px 0;border-bottom:1px solid var(--ink08);letter-spacing:-.02em}
+.mmenu a:not(.mm-cta){display:block;font-size:26px;font-weight:700;color:var(--ink);padding:16px 0;border-bottom:1px solid var(--ink08);letter-spacing:-.02em}
+.mmenu .mm-cta{display:inline-flex;margin-top:24px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:16px 36px;background:var(--ink);color:var(--cream) !important;border-bottom:none}
 .mm-lang{display:flex;gap:10px;margin-top:24px}
 .mm-lang button{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink60);padding:6px 0;border-bottom:2px solid transparent;transition:all .2s}
 .mm-lang button.on{color:var(--ink);border-bottom-color:var(--olive)}
-.mm-cta{display:inline-flex;margin-top:24px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:16px 36px;background:var(--ink);color:var(--cream)}
+/* mm-cta styles moved to .mmenu .mm-cta above */
 
 /* ═══════════════════════════════
    HERO
