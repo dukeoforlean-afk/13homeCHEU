@@ -53,6 +53,7 @@ nav.light .lb.on{background:var(--ink);color:var(--cream)}
 nav.dark .lb{color:rgba(249,221,182,.45)}
 nav.dark .lb.on{background:var(--cream);color:var(--ink)}
 .ncta{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px 24px;border:1px solid;transition:all .2s}
+.ncta-nav{display:inline-flex}
 nav.light .ncta{border-color:var(--ink);color:var(--ink)}
 nav.light .ncta:hover{background:var(--ink);color:var(--cream)}
 nav.dark .ncta{border-color:rgba(249,221,182,.45);color:var(--cream)}
@@ -373,55 +374,137 @@ footer{
    RESPONSIVE
 ═══════════════════════════════ */
 @media(max-width:1024px){
-  nav{padding:0 20px;height:60px}
+  /* ── NAV ── */
+  nav{padding:0 16px;height:60px}
   .n-mid{display:none}
   .brg{display:flex}
+  .ncta-nav{display:none}          /* прячем CTA-кнопку в nav на мобиле */
   .mmenu{top:60px}
-  .hero{padding:60px 20px 48px}
-  .hero-logo-img{width:min(380px,80vw)}
-  .hero-bottom{flex-direction:column;align-items:flex-start;gap:20px}
-  .hero-stats{gap:24px}
-  .hs{text-align:left}
+  /* nav-right: только лого языков + бургер, выравниваем */
+  .n-right{gap:10px}
+  .lsw{flex-shrink:0}
+
+  /* ── HERO ── */
+  .hero{padding:72px 20px 48px}
+  .hero-logo-img{width:min(300px,75vw)}
+  .hero-tagline{font-size:11px;letter-spacing:.2em}
+  .hero h1{font-size:clamp(30px,9vw,52px)}
+  .hero-sub{font-size:14px;margin-bottom:32px}
+  .hero-btns{flex-direction:column;gap:10px}
+  .bc,.bg{justify-content:center;text-align:center;width:100%}
+  .hero-bottom{flex-direction:column;align-items:flex-start;gap:16px;margin-top:40px;padding-top:24px}
+  .hero-stats{gap:20px;flex-wrap:wrap}
+  .hs{text-align:left;flex:0 0 auto}
+  .hs-n{font-size:26px}
+
+  /* ── INTRO ── */
   .intro2{grid-template-columns:1fr}
-  .i2-img{min-height:300px}
-  .i2-txt{padding:52px 24px}
-  .tours{padding:72px 20px}
-  .tour-g{grid-template-columns:1fr}
-  .how{padding:72px 20px}
+  .i2-img{min-height:260px}
+  .i2-txt{padding:44px 20px}
+  .i2-txt p{max-width:100%}
+
+  /* ── TOURS ── */
+  .tours{padding:64px 20px}
+  .tour-g{grid-template-columns:1fr;gap:3px}
+  .tc{padding:36px 24px}
+
+  /* ── HOW ── */
+  .how{padding:64px 20px}
   .how-g{grid-template-columns:1fr 1fr;gap:0}
-  .hw{border-bottom:1px solid var(--ink08)}
+  .hw{border-bottom:1px solid var(--ink08);padding:28px 16px}
   .hw:nth-child(2n){border-right:none}
-  .cat-sec{padding:72px 0 72px 20px}
+  .hw-n{font-size:36px}
+
+  /* ── CATALOG ── */
+  .cat-sec{padding:64px 0 64px 20px}
   .cat-hd{padding-right:20px}
   .cat-tabs{padding-right:20px}
   .cat-scroll{padding-right:20px}
-  .cc{flex:0 0 240px}
-  .why{grid-template-columns:1fr}
-  .why-img{min-height:300px}
-  .why-img::after{background:linear-gradient(to top,var(--ink) 0%,transparent 60%)}
-  .why-txt{padding:52px 24px}
-  .geo{padding:72px 20px}
-  .geo-inner{grid-template-columns:1fr;gap:40px}
-  .geo-map{display:none}
-  .revs{padding:72px 20px}
-  .rev-g{grid-template-columns:1fr}
-  .faq{padding:72px 20px}
-  .faq-inner{grid-template-columns:1fr;gap:32px}
-  .contact{grid-template-columns:1fr}
-  .cl{padding:72px 24px}
-  .cr{padding:56px 24px}
-  footer{padding:32px 20px;flex-direction:column;align-items:flex-start;gap:14px}
-  .fl{gap:14px}
-}
-@media(max-width:600px){
-  .hero h1{font-size:clamp(32px,10vw,52px)}
-  .hero-btns{flex-direction:column}
-  .bc,.bg{justify-content:center}
   .cc{flex:0 0 220px}
+
+  /* ── WHY ── */
+  .why{grid-template-columns:1fr}
+  .why-img{min-height:260px}
+  .why-img::after{background:linear-gradient(to top,var(--ink) 0%,transparent 60%)}
+  .why-txt{padding:44px 20px}
+
+  /* ── GEO ── */
+  .geo{padding:64px 20px}
+  .geo-inner{grid-template-columns:1fr;gap:36px}
+  .geo-map{display:none}
+
+  /* ── REVIEWS ── */
+  .revs{padding:64px 20px}
+  .rev-g{grid-template-columns:1fr;gap:3px}
+  .rv{padding:28px 20px}
+
+  /* ── FAQ ── */
+  .faq{padding:64px 20px}
+  .faq-inner{grid-template-columns:1fr;gap:28px}
+
+  /* ── CONTACT ── */
+  .contact{grid-template-columns:1fr}
+  .cl{padding:56px 20px}
+  .cr{padding:48px 20px}
+  .fr{flex-direction:column}
+
+  /* ── FOOTER ── */
+  footer{padding:28px 20px;flex-direction:column;align-items:flex-start;gap:12px}
+  .fl{gap:12px;flex-wrap:wrap}
+  .fc{font-size:10px}
+}
+
+@media(max-width:600px){
+  /* ── NAV ── */
+  nav{height:56px;padding:0 14px}
+  .mmenu{top:56px;padding:28px 20px}
+  .mmenu a{font-size:22px;padding:13px 0}
+  .mm-cta{font-size:11px;padding:14px 28px}
+  .lsw{order:1}
+  .brg{order:2}
+  .n-right{gap:8px}
+
+  /* ── HERO ── */
+  .hero{padding:68px 16px 40px}
+  .hero-logo-img{width:min(260px,70vw)}
+  .hero h1{font-size:clamp(28px,8.5vw,44px);line-height:1}
+  .hero-sub{font-size:13px;line-height:1.7}
+  .bc,.bg{padding:14px 20px;font-size:10px}
+  .hero-stats{flex-direction:column;gap:12px}
+  .hs-n{font-size:28px}
+  .hs-l{font-size:9px}
+
+  /* ── TICKER ── */
+  .ti{font-size:10px;padding:0 18px}
+
+  /* ── HOW ── */
   .how-g{grid-template-columns:1fr}
   .hw:nth-child(2n){border-right:none}
-  .fr{flex-direction:column}
-  .hero-stats{flex-direction:column;gap:16px}
+  .hw{padding:24px 16px}
+
+  /* ── CATALOG ── */
+  .cc{flex:0 0 200px}
+  .cat-sec{padding:56px 0 56px 16px}
+  .cat-hd{padding-right:16px}
+  .cat-tabs{padding-right:16px}
+  .cat-scroll{padding-right:16px}
+
+  /* ── REVIEWS ── */
+  .rv-txt{font-size:13px}
+
+  /* ── FAQ ── */
+  .fq summary{font-size:14px}
+  .fq-body{font-size:13px}
+
+  /* ── CONTACT ── */
+  .cl h2{font-size:clamp(22px,6vw,34px)}
+  .cr h3{font-size:17px}
+  .ff input,.ff textarea,.ff select{font-size:13px}
+  .fsub{font-size:10px;padding:13px 24px}
+
+  /* ── FOOTER ── */
+  .fl{gap:10px}
+  .fl a{font-size:9px}
 }
 </style>
 </head>
@@ -444,7 +527,7 @@ footer{
       <button class="lb on" onclick="setLang('ru')">RU</button>
       <button class="lb" onclick="setLang('en')">EN</button>
     </div>
-    <a href="#contact" class="ncta" data-ru="Записаться на тур" data-en="Book a tour">Записаться на тур</a>
+    <a href="#contact" class="ncta ncta-nav" data-ru="Записаться на тур" data-en="Book a tour">Записаться на тур</a>
     <button class="brg" onclick="togMob()" id="brg">
       <span id="b1"></span><span id="b2"></span><span id="b3"></span>
     </button>
@@ -492,7 +575,7 @@ footer{
     <div class="hero-stats">
       <div class="hs"><div class="hs-n">5<span>+</span></div><div class="hs-l" data-ru="Лет на рынке" data-en="Years on the market">Лет на рынке</div></div>
       <div class="hs"><div class="hs-n">500<span>+</span></div><div class="hs-l" data-ru="Фабрик в базе" data-en="Factories in database">Фабрик в базе</div></div>
-      <div class="hs"><div class="hs-n">1 000<span>+</span></div><div class="hs-l" data-ru="Клиентов" data-en="Clients">Клиентов</div></div>
+      <div class="hs"><div class="hs-n">1 000<span>+</span></div><div class="hs-l" data-ru="Довольных клиентов" data-en="Happy clients">Довольных клиентов</div></div>
       
     </div>
   </div>
