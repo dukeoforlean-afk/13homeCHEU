@@ -357,15 +357,13 @@ form{display:flex;flex-direction:column;gap:10px}
 .ff textarea{resize:vertical;min-height:68px}
 .fsub{margin-top:18px;align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:14px 30px;background:var(--ink);color:var(--cream);cursor:pointer;transition:background .18s;border:none;font-family:inherit}
 .fsub:hover{background:var(--brown)}
-/* intl-tel-input overrides */
-.iti{width:100%}
-.iti__flag-container{z-index:10}
-.iti input,.iti input[type=tel]{width:100%;background:var(--paper);border:none;border-bottom:1px solid var(--ink20);padding:10px 12px 10px 52px;font-family:inherit;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s}
-.iti input:focus{border-bottom-color:var(--olive)}
-.iti__selected-flag{background:transparent!important;border-right:1px solid var(--ink10);padding:0 8px 0 10px}
-.iti__country-list{border:1px solid var(--ink10);background:var(--paper);box-shadow:0 8px 24px rgba(0,0,0,.12);font-size:13px;max-height:240px}
-.iti__country.iti__highlight{background:var(--paper2)}
-.iti__dial-code{color:var(--ink40)}
+/* phone field with country code */
+.phone-wrap{display:flex;gap:0;border-bottom:1px solid var(--ink20);transition:border-color .2s}
+.phone-wrap:focus-within{border-bottom-color:var(--olive)}
+.phone-dial{display:flex;align-items:center;gap:6px;padding:10px 10px 10px 0;font-size:14px;color:var(--ink);white-space:nowrap;flex-shrink:0;cursor:default;min-width:72px}
+.phone-dial-flag{font-size:18px;line-height:1}
+.phone-dial-code{font-size:13px;font-weight:600;color:var(--ink60)}
+.phone-wrap input[type=tel]{flex:1;background:transparent;border:none;padding:10px 0;font-family:inherit;font-size:14px;color:var(--ink);outline:none}
 .fsub:disabled{opacity:.35;cursor:not-allowed;background:var(--ink)}
 .fsub:disabled:hover{background:var(--ink)}
 .pd-wrap{display:flex;align-items:flex-start;gap:12px;margin-bottom:20px;margin-top:4px}
@@ -831,7 +829,10 @@ footer{
     <form onsubmit="doForm(event)">
       <div class="fr">
         <div class="ff"><label data-ru="Имя" data-en="Name">Имя</label><input type="text" required></div>
-        <div class="ff"><label data-ru="Телефон / WhatsApp" data-en="Phone / WhatsApp">Телефон</label><input type="tel" id="phone-input" autocomplete="tel"></div>
+        <div class="ff"><label data-ru="Телефон / WhatsApp" data-en="Phone / WhatsApp">Телефон</label><div class="phone-wrap">
+            <div class="phone-dial"><span class="phone-dial-flag" id="phone-flag">🇷🇺</span><span class="phone-dial-code" id="phone-code">+7</span></div>
+            <input type="tel" id="phone-input" autocomplete="tel" placeholder="999 000 00 00">
+          </div></div>
       </div>
       <div class="ff"><label>Email</label><input type="email"></div>
       <div class="ff">
@@ -985,10 +986,11 @@ function doForm(e){
   var form = e.target;
 
   var inputs = form.querySelectorAll('input:not([type=checkbox]),select,textarea');
-  // Берём полный номер с кодом страны из intl-tel-input
-  var phoneVal = (typeof iti !== 'undefined' && iti)
-    ? iti.getNumber()
-    : (inputs[1] ? inputs[1].value : '');
+  // Берём номер и добавляем код страны
+  var rawPhone = inputs[1] ? inputs[1].value.trim() : '';
+  var phoneVal = rawPhone
+    ? (rawPhone.startsWith('+') ? rawPhone : detectedDialCode + ' ' + rawPhone)
+    : '';
   var payload = {
     name:    inputs[0] ? inputs[0].value : '',
     phone:   phoneVal,
@@ -1027,28 +1029,44 @@ var obs=new IntersectionObserver(function(entries){
 },{threshold:.1});
 els.forEach(function(el){el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition='opacity .48s ease,transform .48s ease';obs.observe(el)});
 </script>
-<!-- intl-tel-input JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
 <script>
-// ── intl-tel-input: автоопределение страны по IP ──
-var itiInput = document.getElementById('phone-input');
-var iti;
-if(itiInput){
-  iti = window.intlTelInput(itiInput, {
-    initialCountry:      'auto',
-    geoIpLookup: function(success, failure){
-      // Определяем страну по IP через бесплатный API
-      fetch('https://ipapi.co/json/')
-        .then(function(r){ return r.json(); })
-        .then(function(d){ success(d.country_code || 'ru'); })
-        .catch(function(){ success('ru'); }); // fallback — Россия
-    },
-    preferredCountries:  ['ru', 'ua', 'kz', 'by', 'de', 'fr', 'gb', 'ae'],
-    separateDialCode:    true,
-    utilsScript:         'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js',
-  });
-}
+// ── Автоопределение кода страны по IP (без сторонних библиотек) ──
+var DIAL_CODES = {
+  RU:'+7',KZ:'+7',UA:'+380',BY:'+375',
+  DE:'+49',FR:'+33',GB:'+44',IT:'+39',ES:'+34',NL:'+31',
+  PL:'+48',CZ:'+420',AT:'+43',CH:'+41',SE:'+46',NO:'+47',FI:'+358',DK:'+45',
+  AE:'+971',SA:'+966',TR:'+90',IL:'+972',
+  US:'+1',CA:'+1',AU:'+61',NZ:'+64',
+  CN:'+86',JP:'+81',KR:'+82',IN:'+91',
+  PT:'+351',GR:'+30',RO:'+40',HU:'+36',BG:'+359',HR:'+385',
+  LT:'+370',LV:'+371',EE:'+372',SK:'+421',SI:'+386',
+  AZ:'+994',GE:'+995',AM:'+374',UZ:'+998',TM:'+993',KG:'+996',TJ:'+992'
+};
+var FLAGS = {
+  RU:'🇷🇺',KZ:'🇰🇿',UA:'🇺🇦',BY:'🇧🇾',
+  DE:'🇩🇪',FR:'🇫🇷',GB:'🇬🇧',IT:'🇮🇹',ES:'🇪🇸',NL:'🇳🇱',
+  PL:'🇵🇱',CZ:'🇨🇿',AT:'🇦🇹',CH:'🇨🇭',SE:'🇸🇪',NO:'🇳🇴',FI:'🇫🇮',DK:'🇩🇰',
+  AE:'🇦🇪',SA:'🇸🇦',TR:'🇹🇷',IL:'🇮🇱',
+  US:'🇺🇸',CA:'🇨🇦',AU:'🇦🇺',NZ:'🇳🇿',
+  CN:'🇨🇳',JP:'🇯🇵',KR:'🇰🇷',IN:'🇮🇳',
+  PT:'🇵🇹',GR:'🇬🇷',RO:'🇷🇴',HU:'🇭🇺',BG:'🇧🇬',HR:'🇭🇷',
+  LT:'🇱🇹',LV:'🇱🇻',EE:'🇪🇪',SK:'🇸🇰',SI:'🇸🇮',
+  AZ:'🇦🇿',GE:'🇬🇪',AM:'🇦🇲',UZ:'🇺🇿',TM:'🇹🇲',KG:'🇰🇬',TJ:'🇹🇯'
+};
+var detectedDialCode = '+7';
+fetch('https://ipapi.co/json/')
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    var cc = (d.country_code || 'RU').toUpperCase();
+    var flag = FLAGS[cc] || '🌍';
+    var code = DIAL_CODES[cc] || ('+' + (d.country_calling_code || '7').replace('+',''));
+    detectedDialCode = code;
+    var flagEl = document.getElementById('phone-flag');
+    var codeEl = document.getElementById('phone-code');
+    if(flagEl) flagEl.textContent = flag;
+    if(codeEl) codeEl.textContent = code;
+  })
+  .catch(function(){});
 </script>
 </body>
 </html>
