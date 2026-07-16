@@ -357,6 +357,15 @@ form{display:flex;flex-direction:column;gap:10px}
 .ff textarea{resize:vertical;min-height:68px}
 .fsub{margin-top:18px;align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:14px 30px;background:var(--ink);color:var(--cream);cursor:pointer;transition:background .18s;border:none;font-family:inherit}
 .fsub:hover{background:var(--brown)}
+/* intl-tel-input overrides */
+.iti{width:100%}
+.iti__flag-container{z-index:10}
+.iti input,.iti input[type=tel]{width:100%;background:var(--paper);border:none;border-bottom:1px solid var(--ink20);padding:10px 12px 10px 52px;font-family:inherit;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s}
+.iti input:focus{border-bottom-color:var(--olive)}
+.iti__selected-flag{background:transparent!important;border-right:1px solid var(--ink10);padding:0 8px 0 10px}
+.iti__country-list{border:1px solid var(--ink10);background:var(--paper);box-shadow:0 8px 24px rgba(0,0,0,.12);font-size:13px;max-height:240px}
+.iti__country.iti__highlight{background:var(--paper2)}
+.iti__dial-code{color:var(--ink40)}
 .fsub:disabled{opacity:.35;cursor:not-allowed;background:var(--ink)}
 .fsub:disabled:hover{background:var(--ink)}
 .pd-wrap{display:flex;align-items:flex-start;gap:12px;margin-bottom:20px;margin-top:4px}
@@ -822,7 +831,7 @@ footer{
     <form onsubmit="doForm(event)">
       <div class="fr">
         <div class="ff"><label data-ru="Имя" data-en="Name">Имя</label><input type="text" required></div>
-        <div class="ff"><label data-ru="Телефон / WhatsApp" data-en="Phone / WhatsApp">Телефон</label><input type="tel" placeholder="+7"></div>
+        <div class="ff"><label data-ru="Телефон / WhatsApp" data-en="Phone / WhatsApp">Телефон</label><input type="tel" id="phone-input" autocomplete="tel"></div>
       </div>
       <div class="ff"><label>Email</label><input type="email"></div>
       <div class="ff">
@@ -976,9 +985,13 @@ function doForm(e){
   var form = e.target;
 
   var inputs = form.querySelectorAll('input:not([type=checkbox]),select,textarea');
+  // Берём полный номер с кодом страны из intl-tel-input
+  var phoneVal = (typeof iti !== 'undefined' && iti)
+    ? iti.getNumber()
+    : (inputs[1] ? inputs[1].value : '');
   var payload = {
     name:    inputs[0] ? inputs[0].value : '',
-    phone:   inputs[1] ? inputs[1].value : '',
+    phone:   phoneVal,
     email:   inputs[2] ? inputs[2].value : '',
     format:  inputs[3] ? inputs[3].value : '',
     message: inputs[4] ? inputs[4].value : ''
@@ -1013,6 +1026,29 @@ var obs=new IntersectionObserver(function(entries){
   });
 },{threshold:.1});
 els.forEach(function(el){el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition='opacity .48s ease,transform .48s ease';obs.observe(el)});
+</script>
+<!-- intl-tel-input JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
+<script>
+// ── intl-tel-input: автоопределение страны по IP ──
+var itiInput = document.getElementById('phone-input');
+var iti;
+if(itiInput){
+  iti = window.intlTelInput(itiInput, {
+    initialCountry:      'auto',
+    geoIpLookup: function(success, failure){
+      // Определяем страну по IP через бесплатный API
+      fetch('https://ipapi.co/json/')
+        .then(function(r){ return r.json(); })
+        .then(function(d){ success(d.country_code || 'ru'); })
+        .catch(function(){ success('ru'); }); // fallback — Россия
+    },
+    preferredCountries:  ['ru', 'ua', 'kz', 'by', 'de', 'fr', 'gb', 'ae'],
+    separateDialCode:    true,
+    utilsScript:         'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js',
+  });
+}
 </script>
 </body>
 </html>
