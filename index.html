@@ -54,6 +54,11 @@ nav.dark .lb{color:rgba(249,221,182,.45)}
 nav.dark .lb.on{background:var(--cream);color:var(--ink)}
 .ncta{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px 24px;border:1px solid;transition:all .2s}
 .ncta-nav{display:inline-flex}
+.ncta-consult{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px 20px;border:none;transition:all .2s;white-space:nowrap}
+nav.light .ncta-consult{background:var(--olive);color:var(--cream)}
+nav.dark .ncta-consult{background:var(--olive);color:var(--cream)}
+.ncta-consult:hover{opacity:.85;transform:translateY(-1px)}
+.ncta-consult-nav{display:inline-flex}
 nav.light .ncta{border-color:var(--ink);color:var(--ink)}
 nav.light .ncta:hover{background:var(--ink);color:var(--cream)}
 nav.dark .ncta{border-color:rgba(249,221,182,.45);color:var(--cream)}
@@ -356,13 +361,11 @@ form{display:flex;flex-direction:column;gap:10px}
 .ff textarea{resize:vertical;min-height:68px}
 .fsub{margin-top:18px;align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:14px 30px;background:var(--ink);color:var(--cream);cursor:pointer;transition:background .18s;border:none;font-family:inherit}
 .fsub:hover{background:var(--brown)}
-/* phone field with country code */
+/* phone field with country code select */
 .phone-wrap{display:flex;gap:0;border-bottom:1px solid var(--ink20);transition:border-color .2s}
 .phone-wrap:focus-within{border-bottom-color:var(--olive)}
-.phone-dial{display:flex;align-items:center;gap:6px;padding:10px 10px 10px 0;font-size:14px;color:var(--ink);white-space:nowrap;flex-shrink:0;cursor:default;min-width:72px}
-.phone-dial-flag{font-size:18px;line-height:1}
-.phone-dial-code{font-size:13px;font-weight:600;color:var(--ink60)}
-.phone-wrap input[type=tel]{flex:1;background:transparent;border:none;padding:10px 0;font-family:inherit;font-size:14px;color:var(--ink);outline:none}
+.phone-select{background:transparent;border:none;border-right:1px solid var(--ink10);padding:10px 8px 10px 0;font-family:inherit;font-size:13px;color:var(--ink);outline:none;cursor:pointer;flex-shrink:0;max-width:110px}
+.phone-wrap input[type=tel]{flex:1;background:transparent;border:none;padding:10px 0 10px 10px;font-family:inherit;font-size:14px;color:var(--ink);outline:none}
 .fsub:disabled{opacity:.35;cursor:not-allowed;background:var(--ink)}
 .fsub:disabled:hover{background:var(--ink)}
 .pd-wrap{display:flex;align-items:flex-start;gap:12px;margin-bottom:20px;margin-top:4px}
@@ -391,7 +394,8 @@ footer{
   nav{padding:0 16px;height:60px}
   .n-mid{display:none}
   .brg{display:flex}
-  .ncta-nav{display:none}          /* прячем CTA-кнопку в nav на мобиле */
+  .ncta-nav{display:none}            /* прячем кнопки в nav на мобиле */
+  .ncta-consult-nav{display:none}
   .mmenu{top:60px}
   /* nav-right: только лого языков + бургер, выравниваем */
   .n-right{gap:10px}
@@ -540,6 +544,7 @@ footer{
       <button class="lb on" onclick="setLang('ru')">RU</button>
       <button class="lb" onclick="setLang('en')">EN</button>
     </div>
+    <a href="#contact" class="ncta-consult ncta-consult-nav" data-ru="Бесплатная консультация" data-en="Free consultation">Бесплатная консультация</a>
     <a href="#contact" class="ncta ncta-nav" data-ru="Записаться на тур" data-en="Book a tour">Записаться на тур</a>
     <button class="brg" onclick="togMob()" id="brg">
       <span id="b1"></span><span id="b2"></span><span id="b3"></span>
@@ -559,6 +564,7 @@ footer{
     <button class="on" onclick="setLang('ru')">RU</button>
     <button onclick="setLang('en')">EN</button>
   </div>
+  <a href="#contact" class="mm-cta" onclick="clsMob()" data-ru="Бесплатная консультация" data-en="Free consultation" style="background:var(--olive);margin-bottom:10px">Бесплатная консультация</a>
   <a href="#contact" class="mm-cta" onclick="clsMob()" data-ru="Записаться на тур" data-en="Book a tour">Записаться на тур</a>
 </div>
 
@@ -730,7 +736,6 @@ footer{
     <div class="geo-list">
       <div class="gi"><span class="gi-flag">🇨🇳</span><div><div class="gi-name" data-ru="Гуанчжоу" data-en="Guangzhou">Гуанчжоу</div><div class="gi-sub" data-ru="Мебельные центры CBD" data-en="CBD furniture centres">Мебельные центры CBD</div></div><div class="gi-arr"><svg viewBox="0 0 14 9" fill="#675407"><path d="M0 4.5h12M8 1l4 3.5L8 8"/></svg></div></div>
       <div class="gi"><span class="gi-flag">🏭</span><div><div class="gi-name" data-ru="Фошань" data-en="Foshan">Фошань</div><div class="gi-sub" data-ru="Крупнейший мировой центр производства мебели" data-en="World's largest furniture manufacturing centre">Крупнейший мировой центр производства мебели</div></div><div class="gi-arr"><svg viewBox="0 0 14 9" fill="#675407"><path d="M0 4.5h12M8 1l4 3.5L8 8"/></svg></div></div>
-      <div class="gi"><span class="gi-flag">🇭🇰</span><div><div class="gi-name" data-ru="Гонконг" data-en="Hong Kong">Гонконг</div><div class="gi-sub" data-ru="Прилётный хаб · Дизайн-шоурумы" data-en="Arrival hub · Design showrooms">Прилётный хаб · Дизайн-шоурумы</div></div><div class="gi-arr"><svg viewBox="0 0 14 9" fill="#675407"><path d="M0 4.5h12M8 1l4 3.5L8 8"/></svg></div></div>
       <div class="gi"><span class="gi-flag">🇷🇺</span><div><div class="gi-name" data-ru="Россия" data-en="Russia">Россия</div><div class="gi-sub" data-ru="Доставка во все крупные города" data-en="Delivery to all major cities">Доставка во все крупные города</div></div><div class="gi-arr"><svg viewBox="0 0 14 9" fill="#675407"><path d="M0 4.5h12M8 1l4 3.5L8 8"/></svg></div></div>
       <div class="gi"><span class="gi-flag">🌍</span><div><div class="gi-name" data-ru="Весь мир" data-en="Worldwide">Весь мир</div><div class="gi-sub" data-ru="Международные контейнерные поставки" data-en="International container shipments">Международные контейнерные поставки</div></div><div class="gi-arr"><svg viewBox="0 0 14 9" fill="#675407"><path d="M0 4.5h12M8 1l4 3.5L8 8"/></svg></div></div>
     </div>
@@ -829,7 +834,46 @@ footer{
       <div class="fr">
         <div class="ff"><label data-ru="Имя" data-en="Name">Имя</label><input type="text" required></div>
         <div class="ff"><label data-ru="Телефон / WhatsApp" data-en="Phone / WhatsApp">Телефон</label><div class="phone-wrap">
-            <div class="phone-dial"><span class="phone-dial-flag" id="phone-flag">🇷🇺</span><span class="phone-dial-code" id="phone-code">+7</span></div>
+            <select class="phone-select" id="phone-code-select">
+              <option value="+7">🇷🇺 +7</option>
+              <option value="+380">🇺🇦 +380</option>
+              <option value="+375">🇧🇾 +375</option>
+              <option value="+7">🇰🇿 +7 (KZ)</option>
+              <option value="+994">🇦🇿 +994</option>
+              <option value="+374">🇦🇲 +374</option>
+              <option value="+995">🇬🇪 +995</option>
+              <option value="+998">🇺🇿 +998</option>
+              <option value="+992">🇹🇯 +992</option>
+              <option value="+996">🇰🇬 +996</option>
+              <option value="+993">🇹🇲 +993</option>
+              <option value="+49">🇩🇪 +49</option>
+              <option value="+33">🇫🇷 +33</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+39">🇮🇹 +39</option>
+              <option value="+34">🇪🇸 +34</option>
+              <option value="+31">🇳🇱 +31</option>
+              <option value="+48">🇵🇱 +48</option>
+              <option value="+43">🇦🇹 +43</option>
+              <option value="+41">🇨🇭 +41</option>
+              <option value="+46">🇸🇪 +46</option>
+              <option value="+47">🇳🇴 +47</option>
+              <option value="+45">🇩🇰 +45</option>
+              <option value="+358">🇫🇮 +358</option>
+              <option value="+420">🇨🇿 +420</option>
+              <option value="+36">🇭🇺 +36</option>
+              <option value="+40">🇷🇴 +40</option>
+              <option value="+971">🇦🇪 +971</option>
+              <option value="+966">🇸🇦 +966</option>
+              <option value="+90">🇹🇷 +90</option>
+              <option value="+972">🇮🇱 +972</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+1">🇨🇦 +1 (CA)</option>
+              <option value="+61">🇦🇺 +61</option>
+              <option value="+86">🇨🇳 +86</option>
+              <option value="+81">🇯🇵 +81</option>
+              <option value="+82">🇰🇷 +82</option>
+              <option value="+91">🇮🇳 +91</option>
+            </select>
             <input type="tel" id="phone-input" autocomplete="tel" placeholder="999 000 00 00">
           </div></div>
       </div>
@@ -985,11 +1029,11 @@ function doForm(e){
   var form = e.target;
 
   var inputs = form.querySelectorAll('input:not([type=checkbox]),select,textarea');
-  // Берём номер и добавляем код страны
+  // Берём код страны из select + номер из input
+  var phoneSelect = document.getElementById('phone-code-select');
+  var phoneCode = phoneSelect ? phoneSelect.value : '';
   var rawPhone = inputs[1] ? inputs[1].value.trim() : '';
-  var phoneVal = rawPhone
-    ? (rawPhone.startsWith('+') ? rawPhone : detectedDialCode + ' ' + rawPhone)
-    : '';
+  var phoneVal = rawPhone ? phoneCode + ' ' + rawPhone : '';
   var payload = {
     name:    inputs[0] ? inputs[0].value : '',
     phone:   phoneVal,
@@ -1028,44 +1072,6 @@ var obs=new IntersectionObserver(function(entries){
 },{threshold:.1});
 els.forEach(function(el){el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition='opacity .48s ease,transform .48s ease';obs.observe(el)});
 </script>
-<script>
-// ── Автоопределение кода страны по IP (без сторонних библиотек) ──
-var DIAL_CODES = {
-  RU:'+7',KZ:'+7',UA:'+380',BY:'+375',
-  DE:'+49',FR:'+33',GB:'+44',IT:'+39',ES:'+34',NL:'+31',
-  PL:'+48',CZ:'+420',AT:'+43',CH:'+41',SE:'+46',NO:'+47',FI:'+358',DK:'+45',
-  AE:'+971',SA:'+966',TR:'+90',IL:'+972',
-  US:'+1',CA:'+1',AU:'+61',NZ:'+64',
-  CN:'+86',JP:'+81',KR:'+82',IN:'+91',
-  PT:'+351',GR:'+30',RO:'+40',HU:'+36',BG:'+359',HR:'+385',
-  LT:'+370',LV:'+371',EE:'+372',SK:'+421',SI:'+386',
-  AZ:'+994',GE:'+995',AM:'+374',UZ:'+998',TM:'+993',KG:'+996',TJ:'+992'
-};
-var FLAGS = {
-  RU:'🇷🇺',KZ:'🇰🇿',UA:'🇺🇦',BY:'🇧🇾',
-  DE:'🇩🇪',FR:'🇫🇷',GB:'🇬🇧',IT:'🇮🇹',ES:'🇪🇸',NL:'🇳🇱',
-  PL:'🇵🇱',CZ:'🇨🇿',AT:'🇦🇹',CH:'🇨🇭',SE:'🇸🇪',NO:'🇳🇴',FI:'🇫🇮',DK:'🇩🇰',
-  AE:'🇦🇪',SA:'🇸🇦',TR:'🇹🇷',IL:'🇮🇱',
-  US:'🇺🇸',CA:'🇨🇦',AU:'🇦🇺',NZ:'🇳🇿',
-  CN:'🇨🇳',JP:'🇯🇵',KR:'🇰🇷',IN:'🇮🇳',
-  PT:'🇵🇹',GR:'🇬🇷',RO:'🇷🇴',HU:'🇭🇺',BG:'🇧🇬',HR:'🇭🇷',
-  LT:'🇱🇹',LV:'🇱🇻',EE:'🇪🇪',SK:'🇸🇰',SI:'🇸🇮',
-  AZ:'🇦🇿',GE:'🇬🇪',AM:'🇦🇲',UZ:'🇺🇿',TM:'🇹🇲',KG:'🇰🇬',TJ:'🇹🇯'
-};
-var detectedDialCode = '+7';
-fetch('https://ipapi.co/json/')
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    var cc = (d.country_code || 'RU').toUpperCase();
-    var flag = FLAGS[cc] || '🌍';
-    var code = DIAL_CODES[cc] || ('+' + (d.country_calling_code || '7').replace('+',''));
-    detectedDialCode = code;
-    var flagEl = document.getElementById('phone-flag');
-    var codeEl = document.getElementById('phone-code');
-    if(flagEl) flagEl.textContent = flag;
-    if(codeEl) codeEl.textContent = code;
-  })
-  .catch(function(){});
-</script>
+
 </body>
 </html>
