@@ -361,6 +361,9 @@ form{display:flex;flex-direction:column;gap:10px}
 .ff textarea{resize:vertical;min-height:68px}
 .fsub{margin-top:18px;align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:14px 30px;background:var(--ink);color:var(--cream);cursor:pointer;transition:background .18s;border:none;font-family:inherit}
 .fsub:hover{background:var(--brown)}
+.ff-error input,.ff-error textarea,.ff-error select,.ff-error .phone-wrap{border-bottom-color:#c0392b!important}
+.ff-error .err-msg{display:block}
+.err-msg{display:none;font-size:11px;color:#c0392b;margin-top:5px;letter-spacing:.02em}
 /* phone field with country code select */
 .phone-wrap{display:flex;gap:0;border-bottom:1px solid var(--ink20);transition:border-color .2s}
 .phone-wrap:focus-within{border-bottom-color:var(--olive)}
@@ -830,54 +833,66 @@ footer{
   </div>
   <div class="cr">
     <h3 data-ru="Оставить заявку" data-en="Send a request">Оставить заявку</h3>
-    <form onsubmit="doForm(event)">
+    <form onsubmit="doForm(event)" novalidate>
       <div class="fr">
-        <div class="ff"><label data-ru="Имя" data-en="Name">Имя</label><input type="text" required></div>
-        <div class="ff"><label data-ru="Телефон / WhatsApp" data-en="Phone / WhatsApp">Телефон</label><div class="phone-wrap">
-            <select class="phone-select" id="phone-code-select">
-              <option value="+7">🇷🇺 +7</option>
-              <option value="+380">🇺🇦 +380</option>
-              <option value="+375">🇧🇾 +375</option>
-              <option value="+7">🇰🇿 +7 (KZ)</option>
-              <option value="+994">🇦🇿 +994</option>
-              <option value="+374">🇦🇲 +374</option>
-              <option value="+995">🇬🇪 +995</option>
-              <option value="+998">🇺🇿 +998</option>
-              <option value="+992">🇹🇯 +992</option>
-              <option value="+996">🇰🇬 +996</option>
-              <option value="+993">🇹🇲 +993</option>
-              <option value="+49">🇩🇪 +49</option>
-              <option value="+33">🇫🇷 +33</option>
-              <option value="+44">🇬🇧 +44</option>
-              <option value="+39">🇮🇹 +39</option>
-              <option value="+34">🇪🇸 +34</option>
-              <option value="+31">🇳🇱 +31</option>
-              <option value="+48">🇵🇱 +48</option>
-              <option value="+43">🇦🇹 +43</option>
-              <option value="+41">🇨🇭 +41</option>
-              <option value="+46">🇸🇪 +46</option>
-              <option value="+47">🇳🇴 +47</option>
-              <option value="+45">🇩🇰 +45</option>
-              <option value="+358">🇫🇮 +358</option>
-              <option value="+420">🇨🇿 +420</option>
-              <option value="+36">🇭🇺 +36</option>
-              <option value="+40">🇷🇴 +40</option>
-              <option value="+971">🇦🇪 +971</option>
-              <option value="+966">🇸🇦 +966</option>
-              <option value="+90">🇹🇷 +90</option>
-              <option value="+972">🇮🇱 +972</option>
-              <option value="+1">🇺🇸 +1</option>
-              <option value="+1">🇨🇦 +1 (CA)</option>
-              <option value="+61">🇦🇺 +61</option>
-              <option value="+86">🇨🇳 +86</option>
-              <option value="+81">🇯🇵 +81</option>
-              <option value="+82">🇰🇷 +82</option>
-              <option value="+91">🇮🇳 +91</option>
+        <div class="ff" id="ff-name">
+          <label data-ru="Имя *" data-en="Name *">Имя *</label>
+          <input type="text" id="f-name" autocomplete="name" placeholder="">
+          <span class="err-msg" id="err-name" data-ru="Пожалуйста, введите ваше имя" data-en="Please enter your name">Пожалуйста, введите ваше имя</span>
+        </div>
+        <div class="ff" id="ff-phone">
+          <label data-ru="Телефон / WhatsApp *" data-en="Phone / WhatsApp *">Телефон / WhatsApp *</label>
+          <div class="phone-wrap" id="phone-wrap">
+            <select class="phone-select" id="phone-code-select" onchange="onDialChange(this)">
+              <option value="+7" data-mask="### ### ## ##">🇷🇺 +7</option>
+              <option value="+380" data-mask="## ### ## ##">🇺🇦 +380</option>
+              <option value="+375" data-mask="## ### ## ##">🇧🇾 +375</option>
+              <option value="+77" data-mask="### ### ## ##">🇰🇿 +7 KZ</option>
+              <option value="+994" data-mask="## ### ## ##">🇦🇿 +994</option>
+              <option value="+374" data-mask="## ### ###">🇦🇲 +374</option>
+              <option value="+995" data-mask="### ## ## ##">🇬🇪 +995</option>
+              <option value="+998" data-mask="## ### ## ##">🇺🇿 +998</option>
+              <option value="+992" data-mask="## ### ## ##">🇹🇯 +992</option>
+              <option value="+996" data-mask="### ### ###">🇰🇬 +996</option>
+              <option value="+993" data-mask="## ## ## ##">🇹🇲 +993</option>
+              <option value="+49" data-mask="### #######">🇩🇪 +49</option>
+              <option value="+33" data-mask="# ## ## ## ##">🇫🇷 +33</option>
+              <option value="+44" data-mask="#### ######">🇬🇧 +44</option>
+              <option value="+39" data-mask="### ### ####">🇮🇹 +39</option>
+              <option value="+34" data-mask="### ### ###">🇪🇸 +34</option>
+              <option value="+31" data-mask="# ########">🇳🇱 +31</option>
+              <option value="+48" data-mask="### ### ###">🇵🇱 +48</option>
+              <option value="+43" data-mask="### #######">🇦🇹 +43</option>
+              <option value="+41" data-mask="## ### ## ##">🇨🇭 +41</option>
+              <option value="+46" data-mask="##-### ## ##">🇸🇪 +46</option>
+              <option value="+47" data-mask="### ## ###">🇳🇴 +47</option>
+              <option value="+45" data-mask="## ## ## ##">🇩🇰 +45</option>
+              <option value="+358" data-mask="## ### ####">🇫🇮 +358</option>
+              <option value="+420" data-mask="### ### ###">🇨🇿 +420</option>
+              <option value="+36" data-mask="## ### ####">🇭🇺 +36</option>
+              <option value="+40" data-mask="### ### ###">🇷🇴 +40</option>
+              <option value="+971" data-mask="## ### ####">🇦🇪 +971</option>
+              <option value="+966" data-mask="## ### ####">🇸🇦 +966</option>
+              <option value="+90" data-mask="### ### ## ##">🇹🇷 +90</option>
+              <option value="+972" data-mask="##-### ####">🇮🇱 +972</option>
+              <option value="+1" data-mask="### ### ####">🇺🇸 +1</option>
+              <option value="+1CA" data-mask="### ### ####">🇨🇦 +1 CA</option>
+              <option value="+61" data-mask="### ### ###">🇦🇺 +61</option>
+              <option value="+86" data-mask="### #### ####">🇨🇳 +86</option>
+              <option value="+81" data-mask="##-#### ####">🇯🇵 +81</option>
+              <option value="+82" data-mask="##-#### ####">🇰🇷 +82</option>
+              <option value="+91" data-mask="##### #####">🇮🇳 +91</option>
             </select>
-            <input type="tel" id="phone-input" autocomplete="tel" placeholder="999 000 00 00">
-          </div></div>
+            <input type="tel" id="phone-input" autocomplete="tel" placeholder="999 000 00 00" oninput="onPhoneInput(this)">
+          </div>
+          <span class="err-msg" id="err-phone" data-ru="Введите корректный номер телефона" data-en="Please enter a valid phone number">Введите корректный номер телефона</span>
+        </div>
       </div>
-      <div class="ff"><label>Email</label><input type="email"></div>
+      <div class="ff" id="ff-email">
+        <label>Email *</label>
+        <input type="email" id="f-email" autocomplete="email" placeholder="">
+        <span class="err-msg" id="err-email" data-ru="Введите корректный email" data-en="Please enter a valid email">Введите корректный email</span>
+      </div>
       <div class="ff">
         <label data-ru="Формат" data-en="Format">Формат</label>
         <select>
@@ -1023,23 +1038,100 @@ function showPd(lang){
   document.getElementById('pd-modal-' + l).style.display = 'block';
 }
 
+// ── Телефонное поле: автоподстановка кода ──────────────────
+function onDialChange(sel) {
+  var code = sel.value.replace('CA',''); // +1CA → +1
+  var inp  = document.getElementById('phone-input');
+  if (!inp) return;
+  inp.value = code + ' ';
+  inp.focus();
+  // Ставим курсор в конец
+  var len = inp.value.length;
+  inp.setSelectionRange(len, len);
+  clearFieldError('ff-phone');
+}
+
+function onPhoneInput(inp) {
+  // Запрещаем удалять код страны
+  var sel    = document.getElementById('phone-code-select');
+  var code   = sel ? sel.value.replace('CA','') : '';
+  var prefix = code + ' ';
+  if (inp.value.length < prefix.length) {
+    inp.value = prefix;
+    inp.setSelectionRange(prefix.length, prefix.length);
+  }
+  clearFieldError('ff-phone');
+}
+
+// Инициализация: подставить код сразу при загрузке
+window.addEventListener('DOMContentLoaded', function(){
+  var sel = document.getElementById('phone-code-select');
+  if (sel) onDialChange(sel);
+});
+
+// ── Валидация ────────────────────────────────────────────────
+function showFieldError(ffId, errId) {
+  var ff  = document.getElementById(ffId);
+  var err = document.getElementById(errId);
+  if (ff)  ff.classList.add('ff-error');
+  if (err) err.textContent = err.getAttribute('data-' + L) || err.textContent;
+}
+function clearFieldError(ffId) {
+  var ff = document.getElementById(ffId);
+  if (ff) ff.classList.remove('ff-error');
+}
+
+function validateForm() {
+  var ok = true;
+
+  // Имя
+  var name = (document.getElementById('f-name') || {}).value || '';
+  if (name.trim().length < 2) {
+    showFieldError('ff-name','err-name'); ok = false;
+  } else { clearFieldError('ff-name'); }
+
+  // Телефон: проверяем что есть цифры после кода
+  var sel    = document.getElementById('phone-code-select');
+  var code   = sel ? sel.value.replace('CA','') : '';
+  var prefix = code + ' ';
+  var phone  = (document.getElementById('phone-input') || {}).value || '';
+  var digits = phone.replace(prefix,'').replace(/\D/g,'');
+  if (digits.length < 5) {
+    showFieldError('ff-phone','err-phone'); ok = false;
+  } else { clearFieldError('ff-phone'); }
+
+  // Email
+  var email = (document.getElementById('f-email') || {}).value || '';
+  var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRe.test(email.trim())) {
+    showFieldError('ff-email','err-email'); ok = false;
+  } else { clearFieldError('ff-email'); }
+
+  return ok;
+}
+
 function doForm(e){
   e.preventDefault();
+  if (!validateForm()) return; // стоп если есть ошибки
+
   var btn  = document.getElementById('fsub');
   var form = e.target;
 
-  var inputs = form.querySelectorAll('input:not([type=checkbox]),select,textarea');
-  // Берём код страны из select + номер из input
-  var phoneSelect = document.getElementById('phone-code-select');
-  var phoneCode = phoneSelect ? phoneSelect.value : '';
-  var rawPhone = inputs[1] ? inputs[1].value.trim() : '';
-  var phoneVal = rawPhone ? phoneCode + ' ' + rawPhone : '';
+  // Собираем данные по id
+  var nameVal   = (document.getElementById('f-name')  || {}).value || '';
+  var emailVal  = (document.getElementById('f-email') || {}).value || '';
+  var sel       = document.getElementById('phone-code-select');
+  var phoneVal  = (document.getElementById('phone-input') || {}).value || '';
+  var inputs    = form.querySelectorAll('input:not([type=checkbox]):not(#f-name):not(#f-email):not(#phone-input),select:not(#phone-code-select),textarea');
+  var formatVal = inputs[0] ? inputs[0].value : '';
+  var msgVal    = inputs[1] ? inputs[1].value : '';
+
   var payload = {
-    name:    inputs[0] ? inputs[0].value : '',
+    name:    nameVal,
     phone:   phoneVal,
-    email:   inputs[2] ? inputs[2].value : '',
-    format:  inputs[3] ? inputs[3].value : '',
-    message: inputs[4] ? inputs[4].value : ''
+    email:   emailVal,
+    format:  formatVal,
+    message: msgVal
   };
 
   btn.textContent   = L==='ru' ? 'Отправляем...' : 'Sending...';
@@ -1060,6 +1152,9 @@ function doForm(e){
     form.reset();
     var cb = document.getElementById('pd-cb');
     if(cb) cb.checked = false;
+    // Сбросить телефон на код по умолчанию
+    var selReset = document.getElementById('phone-code-select');
+    if(selReset){ selReset.selectedIndex=0; onDialChange(selReset); }
   });
 }
 
